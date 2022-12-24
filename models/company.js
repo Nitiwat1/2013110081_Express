@@ -8,6 +8,6 @@ const companySchema = new Schema({
     }
 }, { collection: "companys" });
 
-const company = mongoose.model("Companys", companySchema)
+const company = mongoose.model("Company", companySchema)
 
 module.exports = company
