@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const companyRouter = require('./routes/company');
 const staffRouter = require('./routes/staff');
+const shopRouter = require('./routes/shop');
 
 var app = express();
 
@@ -22,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/company', companyRouter);
-app.use('/staff', staffRouter)
+app.use('/staff', staffRouter);
+app.use('/shop', shopRouter)
 
 module.exports = app;
