@@ -18,7 +18,7 @@ const shopSchema = new Schema({
 
 shopSchema.virtual('menu', {
     ref: 'Menu',
-    localField: '_id',
+    localField: '_id', //_id filed
     foreignField: 'shop'
 })
 
