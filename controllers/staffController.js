@@ -43,22 +43,19 @@ exports.show = async (req, res, next) => {
     try {
         const { id } = req.params
         const staff = await Staff.findOne({
-            _id: id
+            id: id
         })
         if (!staff) {
-            throw new Error('ไม่พบผู้ใช้งาน')
+            const error = new Error("ไม่พบผู้ใช้งาน")
+            error.statusCode = 400
+            throw error;
         } else {
             res.status(200).json({
                 data: staff
             })
         }
-
     } catch (error) {
-        res.status(400).json({
-            error: {
-                message: 'เกิดข้อผิดพลาด : ' + error.message
-            }
-        })
+        next(error)
     }
 };
 
@@ -70,50 +67,50 @@ exports.destroy = async (req, res, next) => {
         const staff = await Staff.deleteOne({
             _id: id
         })
-
-        if (staff.deleteCount === 0) {
-            throw new Error('ไม่สามารถลบข้อมูลได้ / ไม่พบข้อมูลผู้ใช้งาน')
+        if (!staff.deleteCount === 0) {
+            const error = new Error("ไม่สามารถลบข้อมูลได้ / ไม่พบข้อมูลผู้ใช้งาน")
+            error.statusCode = 400
+            throw error;
         } else {
             res.status(200).json({
                 message: 'ลบข้อมูลเรียบร้อยแล้ว',
             })
         }
     } catch (error) {
-        res.status(400).json({
-            error: {
-                message: 'เกิดข้อผิดพลาด : ' + error.message
-            }
-        })
+        next(error)
     }
 };
 
 exports.update = async (req, res, next) => {
     try {
-        const { id } = req.params
-        const { name, salary } = req.body
-
-        // const staff = await Staff.findById(id)
-        // staff.name = name
-        // staff.salary = salary
-        // await staff.save()
-
+        const { id } = req.params;
+        const { name, salary } = req.body;
+        // const staff = await Staff.findById(id);
+        // staff.name = name;
+        // staff.salary = salary;
+        // await staff.save();
         // const staff = await Staff.findByIdAndUpdate(id, {
-        //     name: name,
-        //     salary: salary
-        // })
-
-        const staff = await Staff.UpdateOne({ _id: id }, {
-            name: name,
-            salary: salary
-        })
-
-        consloe.log(staff)
-
-        res.status(200).json({
-            message: 'แก้ไขข้อมูลเรียบร้อยแล้ว'
-        });
-    } catch {
-
+        //   name: name,
+        //   salary: salary,
+        // });
+        const staff = await Staff.updateOne(
+            { _id: id },
+            {
+                name: name,
+                salary: salary,
+            }
+        );
+        if (staff.nModified === 0) {
+            const error = new Error("ไม่สามารถแก้ไขข้อมูลได้ / ไม่พบผู้ใช้งาน");
+            error.statusCode = 400;
+            throw error;
+        } else {
+            res.status(200).json({
+                message: "แก้ไขข้อมูลเรียบร้อยแล้ว",
+            });
+        }
+    } catch (error) {
+        next(error);
     }
 };
 

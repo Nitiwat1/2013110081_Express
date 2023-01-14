@@ -22,24 +22,21 @@ exports.show = async (req, res, next) => {
   /* http://localhost:3000/staff/63942d89bf53fc309c987962 */
   /* router.get('/id', staffcontroller.show) */
   try {
-    const { id } = req.params
+    const { id } = req.params;
     const company = await Company.findOne({
-      _id: id
-    })
+      _id: id,
+    });
     if (!company) {
-      throw new Error('ไม่พบผู้ใช้งาน')
+      const error = new Error("ไม่พบบริษัท");
+      error.statusCode = 400;
+      throw error;
     } else {
       res.status(200).json({
-        data: company
-      })
+        data: company,
+      });
     }
-
   } catch (error) {
-    res.status(400).json({
-      error: {
-        message: 'เกิดข้อผิดพลาด : ' + error.message
-      }
-    })
+    next(error);
   }
 };
 
@@ -47,24 +44,21 @@ exports.destroy = async (req, res, next) => {
   /* http://localhost:3000/staff/63942d89bf53fc309c987962 */
   /* router.get('/id', staffcontroller.show) */
   try {
-    const { id } = req.params
+    const { id } = req.params;
     const company = await Company.deleteOne({
-      _id: id
-    })
-
-    if (company.deleteCount === 0) {
-      throw new Error('ไม่สามารถลบข้อมูลได้ / ไม่พบบริษัท')
+      _id: id,
+    });
+    if (company.deletedCount === 0) {
+      const error = new Error("ไม่สามารถลบข้อมูลได้ / ไม่พบบริษัท");
+      error.statusCode = 400;
+      throw error;
     } else {
       res.status(200).json({
-        message: 'ลบข้อมูลเรียบร้อยแล้ว',
-      })
+        message: "ลบข้อมูลเรียบร้อยแล้ว",
+      });
     }
   } catch (error) {
-    res.status(400).json({
-      error: {
-        message: 'เกิดข้อผิดพลาด : ' + error.message
-      }
-    })
+    next(error);
   }
 };
 
@@ -79,15 +73,16 @@ exports.update = async (req, res, next) => {
         salary: address,
       }
     );
-
-    res.status(200).json({
-      message: "เพิ่มข้อมูลเรียบร้อย",
-    });
+    if (company.nModified === 0) {
+      const error = new Error("ไม่สามารถแก้ไขข้อมูลได้ / ไม่พบบริษัท");
+      error.statusCode = 400;
+      throw error;
+    } else {
+      res.status(200).json({
+        message: "เพิ่มข้อมูลเรียบร้อย",
+      });
+    }
   } catch (error) {
-    res.status(400).json({
-      error: {
-        message: "เกิดข้อผิดพลาด" + error.message,
-      },
-    });
+    next(error)
   }
 };
