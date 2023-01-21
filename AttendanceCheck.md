@@ -1,1 +1,1 @@
-Nitiwat (Boss) : Chapter 7 - Login with JSON TOKEN
+Nitiwat (Boss) : Chapter 8 - Login with JSON Web Token & Passport.js
