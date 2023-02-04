@@ -102,3 +102,12 @@ exports.login = async (req, res, next) => {
     next(error)
   }
 }
+
+exports.profile = (req, res, next) => {
+  // res.send('Hello kitty');
+  res.status(200).json({
+    name: name,
+    email: email,
+    role: role,
+  })
+}
