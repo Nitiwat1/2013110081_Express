@@ -104,10 +104,11 @@ exports.login = async (req, res, next) => {
 }
 
 exports.profile = (req, res, next) => {
-  // res.send('Hello kitty');
+  // res.send('Hello with a resource');
+  const {role , name , email} = req.user
   res.status(200).json({
-    name: name,
-    email: email,
-    role: role,
-  })
-}
+   role: role,
+   name : name ,
+   email : email
+  });
+};
